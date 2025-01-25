@@ -1,0 +1,64 @@
+<template>
+  <div class="todo-container">
+    <el-checkbox-group 
+      :model-value="todosStore.doneTodos" 
+      @change="handleCheckedChange"
+    >
+      <Item v-for="todo in todosStore.todos" :key="todo.id" :todo="todo" />
+    </el-checkbox-group>
+    
+    <el-pagination 
+      class="pagination-space" 
+      background 
+      layout="sizes, prev, pager, next"
+      :total="1000"
+      :page-size="100"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { useTodosStore } from '@/stores/todos';
+import Item from './Item.vue';
+
+const todosStore = useTodosStore();
+const emit = defineEmits(['update:checkAll', 'update:isIndeterminate']);
+
+const handleCheckedChange = (doneTodos: any[]): void => {
+  todosStore.updateTodo(doneTodos);
+  emit('update:checkAll', todosStore.checkAllBool);
+  emit('update:isIndeterminate', todosStore.isIndeterminate);
+}
+
+const handleSizeChange = (val: number) => {
+  console.log(`${val} items per page`)
+}
+const handleCurrentChange = (val: number) => {
+  console.log(`current page: ${val}`)
+}
+</script>
+
+<style scoped lang="scss">
+.el-checkbox-group {
+  display: grid;
+}
+.todo-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 600px;
+  overflow-y: auto; 
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.pagination-space {
+  margin-top: 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+}
+</style>

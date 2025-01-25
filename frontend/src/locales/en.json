@@ -1,0 +1,12 @@
+{
+  "taskList": "My Task List",
+  "typeSomething": "Search",
+  "addTask": "Add New Task",
+  "editTask": "Edit Task",
+  "title": "Title",
+  "description": "Description",
+  "save": "Save",
+  "cancel": "Cancel",
+  "enterTaskDescription": "Enter task description",
+  "enterTaskTitle": "Enter task title"
+}

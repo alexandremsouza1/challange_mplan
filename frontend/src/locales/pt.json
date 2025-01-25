@@ -1,0 +1,12 @@
+{
+  "taskList": "Minha lista de tarefas",
+  "typeSomething": "Pesquisar",
+  "addTask": "Adicionar Nova Tarefa",
+  "editTask": "Editar Nova Tarefa",
+  "title": "Título",
+  "description": "Descrição",
+  "save": "Salvar",
+  "cancel": "Cancelar",
+  "enterTaskDescription": "Digite a descrição da tarefa",
+  "enterTaskTitle": "Digite o título da tarefa"
+}
