@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
-
+import { taskService } from '@/services/taskService';
 export interface TodoItem {
     id: string;
-    idSync?: string;
+    idSync?: number;
     title: string;
     description?: string;
     completed: boolean;
@@ -84,8 +84,34 @@ export const useTodosStore = defineStore('todos', {
                 resolve(this.todos.some((todo: TodoItem) => todo.title === title));
             });
         },
-        addTodo(todoObj: TodoItem) {
+        async addTodo(todoObj: TodoItem) {
             this.todos.unshift(todoObj);
+            try {
+                await this.updateSyncTodo(todoObj)
+            } catch (error) {
+                console.error('Erro ao adicionar a tarefa:', error);
+                throw error;
+            }
+        },
+        async updateSyncTodo(todoObj: TodoItem) {
+            try {
+              const createdTask = await taskService.createTask({
+                title: todoObj.title,
+                description: todoObj.description || '',
+                completed: todoObj.completed,
+              });
+          
+              this.todos = this.todos.map(todo => 
+                todo.id === todoObj.id 
+                  ? { ...todo, idSync: createdTask.id }
+                  : todo
+              );
+    
+              console.log(`Todo ${todoObj.title} sincronizado com idSync: ${createdTask.id}`);
+            } catch (error) {
+              console.error('Erro ao sincronizar o todo:', error);
+              throw error;
+            }
         },
         updateTodo(doneTodos: string[] = []) {
             this.doneTodos = doneTodos;
@@ -120,6 +146,23 @@ export const useTodosStore = defineStore('todos', {
             this.pageSize = size;
             this.currentPage = 1;
         },
+
+        async syncAll() {
+            try {
+              const unsyncedTodos = this.todos.filter(todo => !todo.idSync);
+              console.log(unsyncedTodos)
+              if (unsyncedTodos.length === 0) {
+                console.log("Não há todos para sincronizar.");
+                return;
+              }
+              for (const todo of unsyncedTodos) {
+                await this.updateSyncTodo(todo);
+              }
+              console.log("Todos sincronizados com sucesso.");
+            } catch (error) {
+              console.error("Erro ao sincronizar todos:", error);
+            }
+          }
     },
     persist: {
         pick: ['todos', 'doneTodos'],

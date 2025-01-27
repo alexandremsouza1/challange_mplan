@@ -13,8 +13,8 @@
   </el-row>
 </template>
 
-<script setup>
-import { ref } from 'vue';
+<script setup lang="ts">
+import { ref,onMounted } from 'vue';
 import { useTodosStore } from '@/stores/todos';
 import Header from './components/Header.vue';
 import List from './components/List.vue';
@@ -24,6 +24,14 @@ const todosStore = useTodosStore()
 const checkAll = ref(false);
 const isIndeterminate = ref(true);
 
+const syncAll = async () => {
+  todosStore.syncAll()
+}
+
+
+onMounted(() => {
+  syncAll();
+});
 
 </script>
 

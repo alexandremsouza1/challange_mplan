@@ -1,33 +1,37 @@
 <template>
-  <div class="button-container">
-    <el-button type="success" circle @click="openAddModal" class="plus-icon">
-      <el-icon>
-        <Plus />
-      </el-icon>
-    </el-button>
-  </div>
+  <div>
+    <div class="button-container">
+      <el-button type="success" circle @click="openAddModal" class="plus-icon">
+        <el-icon>
+          <Plus />
+        </el-icon>
+      </el-button>
+    </div>
 
-  <el-dialog v-model="dialogVisible" :title="isEditing ? $t('editTask') : $t('addTask')" width="400px">
-    <el-form :model="form" label-position="top">
-      <el-form-item :label="$t('title')">
-        <el-input v-model="form.title" :placeholder="$t('enterTaskTitle')" />
-      </el-form-item>
-      <el-form-item :label="$t('description')">
-        <el-input v-model="form.description" type="textarea" :placeholder="$t('enterTaskDescription')" />
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">{{ $t('cancel') }}</el-button>
-        <el-button type="primary" @click="saveTodo">{{ $t('save') }}</el-button>
-      </span>
-    </template>
-  </el-dialog>
+    <el-dialog v-model="dialogVisible" :title="isEditing ? $t('editTask') : $t('addTask')" width="400px">
+      <el-form :model="form" label-position="top">
+        <el-form-item :label="$t('title')">
+          <el-input v-model="form.title" :placeholder="$t('enterTaskTitle')" />
+        </el-form-item>
+        <el-form-item :label="$t('description')">
+          <el-input v-model="form.description" type="textarea" :placeholder="$t('enterTaskDescription')" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">{{ $t('cancel') }}</el-button>
+          <el-button type="primary" @click="saveTodo">{{ $t('save') }}</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
 </template>
+
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { useTodosStore,TodoItem } from '@/stores/todos';
+import { useTodosStore, TodoItem } from '@/stores/todos';
+import notify from '@/services/notificationService';
 
 const dialogVisible = ref(false)
 const isEditing = ref(false)
@@ -49,14 +53,19 @@ const openAddModal = () => {
 function saveTodo() {
   const newTodo: TodoItem = {
     id: Date.now().toString(),
-    idSync: undefined, 
+    idSync: undefined,
     title: form.title,
     description: form.description,
     completed: false,
   };
-
-  todosStore.addTodo(newTodo);
-  dialogVisible.value = false;
+  try {
+    todosStore.addTodo(newTodo);
+    notify.success('Tarefa');
+  } catch (error) {
+    notify.error('Tarefa');
+  } finally {
+    dialogVisible.value = false;
+  }
 }
 
 
@@ -65,11 +74,12 @@ function saveTodo() {
 <style scoped>
 .button-container {
   position: relative;
-  height:50px; 
+  height: 50px;
 }
+
 .plus-icon {
   position: absolute;
-  right: 10px; 
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
 }
