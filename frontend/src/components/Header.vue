@@ -40,7 +40,7 @@
 
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref,watch  } from 'vue';
 import { useTodosStore } from '@/stores/todos';
 import { ElMessage } from 'element-plus';
 import { Search } from '@element-plus/icons-vue'
@@ -55,45 +55,11 @@ const todo = ref<string>('');
 const search = ref<string>('')
 const { locale } = useI18n();
 
-const updateTodo = async (key: string) => {
-    if (todosStore.todosLen >= 10) {
-        ElMessage.closeAll();
-        ElMessage.warning('最多可添加 10 个');
-        todo.value = '';
-        return;
-    }
-    if (key.trim() === '') {
-        ElMessage.closeAll();
-        ElMessage.warning('输入项不能为空');
-        return;
-    }
-    const isRename = await todosStore.checkName(key);
-    if (isRename) {
-        ElMessage.closeAll();
-        ElMessage.warning('输入项不能重复');
-        return;
-    }
-    const todoObj = {
-        id: String(new Date().valueOf()),
-        name: key,
-        done: false,
-    };
-    todosStore.addTodo(todoObj);
-    updateState();
-    todo.value = '';
-};
 
-const handleKeyUp = (e: KeyboardEvent) => {
-    const { keyCode, target } = e;
-    const { value } = target as HTMLInputElement;
-    if (keyCode !== 13) return;
-    updateTodo(value);
-};
+watch(search, (newValue) => {
+    todosStore.setFilter(newValue);
+});
 
-function updateState() {
-    emit('update:checkAll', todosStore.checkAllBool);
-    emit('update:isIndeterminate', todosStore.isIndeterminate);
-}
 
 function changeLanguage(lang: string)  {
     locale.value = lang; 
@@ -101,7 +67,6 @@ function changeLanguage(lang: string)  {
 
 function performSearch(): void {
   console.log("Searching for:", search.value);
-  // Insira aqui a lógica para buscar
 };
 
 const handleSearch = debounce((): void => {

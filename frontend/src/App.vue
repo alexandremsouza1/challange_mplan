@@ -6,12 +6,8 @@
         <template v-if="todosStore.todosLen !== 0">
           <List v-model:checkAll="checkAll" v-model:isIndeterminate="isIndeterminate" />
           <el-divider style="margin:10px 0" />
-          <Footer />
         </template>
-        <el-empty v-else>
-          <template #description />
-          <el-button type="primary" :loading="isReset" @click="handleResetAndRefresh">重置刷新</el-button>
-        </el-empty>
+        <Footer />
       </el-card>
     </el-col>
   </el-row>
@@ -27,15 +23,8 @@ import Footer from './components/Footer.vue';
 const todosStore = useTodosStore()
 const checkAll = ref(false);
 const isIndeterminate = ref(true);
-const isReset = ref(false);
 
-// 重置
-const handleResetAndRefresh = async () => {
-  checkAll.value = false;
-  isIndeterminate.value = true;
-  isReset.value = true;
-  isReset.value = await todosStore.resetTodos();
-}
+
 </script>
 
 

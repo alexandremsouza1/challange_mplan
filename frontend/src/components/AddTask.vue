@@ -25,11 +25,13 @@
   </el-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive } from 'vue'
+import { useTodosStore,TodoItem } from '@/stores/todos';
 
 const dialogVisible = ref(false)
 const isEditing = ref(false)
+const todosStore = useTodosStore();
 
 const form = reactive({
   title: '',
@@ -42,6 +44,19 @@ const openAddModal = () => {
   form.title = ''
   form.description = ''
   dialogVisible.value = true
+}
+
+function saveTodo() {
+  const newTodo: TodoItem = {
+    id: Date.now().toString(),
+    idSync: undefined, 
+    title: form.title,
+    description: form.description,
+    completed: false,
+  };
+
+  todosStore.addTodo(newTodo);
+  dialogVisible.value = false;
 }
 
 

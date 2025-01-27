@@ -1,7 +1,7 @@
 <template>
     <el-checkbox :label="props.todo.id">
-        <span :style="{ textDecoration: props.todo.done ? 'line-through' : 'none' }">
-      {{ props.todo.name }}
+        <span :style="{ textDecoration: props.todo.completed ? 'line-through' : 'none' }">
+      {{ props.todo.title }}
     </span>
         <el-button-group class="todo-group-icon" >
             <el-button type="primary" :icon="Edit" circle 
@@ -16,19 +16,15 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue';
-import { useTodosStore } from '@/stores/todos';
+import { useTodosStore,TodoItem } from '@/stores/todos';
 import { Delete,Edit } from '@element-plus/icons-vue'
 
-interface todoItme {
-    id: string,
-    name: string,
-    done: boolean,
-}
+
 
 const todosStore = useTodosStore();
 const props = defineProps({
     todo: {
-        type: Object as PropType<todoItme>,
+        type: Object as PropType<TodoItem>,
         default: () => ({})
     }
 })

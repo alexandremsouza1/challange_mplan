@@ -1,34 +1,30 @@
 <template>
     <div class="footer-wrapper">
+        <el-pagination class="pagination-space" background layout="sizes, prev, pager, next" :total="todosStore.todosLen"
+            :page-size="todosStore.pageSize" :current-page="todosStore.currentPage" @size-change="handleSizeChange"
+            @current-change="handleCurrentChange" />
         <AddTask />
     </div>
 </template>
 
 
-<script setup>
+<script setup lang="ts">
 
 import { ref } from 'vue'
 import { useTodosStore } from '@/stores/todos';
+
 import AddTask from './AddTask.vue'
 
 
 const emit = defineEmits(['update:checkAll', 'update:isIndeterminate']);
 const todosStore = useTodosStore();
 
-const checked = ref(false);
 
-const checkAllTodo = (checked) => {
-    todosStore.checkAll(checked);
-    emit('update:checkAll', checked);
-    emit('update:isIndeterminate', false);
+const handleSizeChange = (val: number) => {
+    todosStore.updatePageSize(val)
 }
-const reverseCheck = () => {
-    todosStore.reverseCheck();
-    updateState();
-}
-const clearAllDone = () => {
-    todosStore.clearAllDone();
-    updateState();
+const handleCurrentChange = (val: number) => {
+    todosStore.updateCurrentPage(val)
 }
 
 function updateState() {
@@ -64,5 +60,13 @@ function updateState() {
 
 .el-button {
     margin: 0 10px;
+}
+
+.pagination-space {
+  margin-top: 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
 }
 </style>
