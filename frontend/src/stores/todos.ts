@@ -89,7 +89,6 @@ export const useTodosStore = defineStore('todos', {
             try {
                 await this.updateSyncTodo(todoObj)
             } catch (error) {
-                console.error('Erro ao adicionar a tarefa:', error);
                 throw error;
             }
         },
@@ -106,10 +105,7 @@ export const useTodosStore = defineStore('todos', {
                   ? { ...todo, idSync: createdTask.id }
                   : todo
               );
-    
-              console.log(`Todo ${todoObj.title} sincronizado com idSync: ${createdTask.id}`);
             } catch (error) {
-              console.error('Erro ao sincronizar o todo:', error);
               throw error;
             }
         },

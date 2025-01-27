@@ -58,14 +58,16 @@ function saveTodo() {
     description: form.description,
     completed: false,
   };
-  try {
-    todosStore.addTodo(newTodo);
-    notify.success('Tarefa');
-  } catch (error) {
-    notify.error('Tarefa');
-  } finally {
-    dialogVisible.value = false;
-  }
+  todosStore.addTodo(newTodo)
+    .then(() => {
+      notify.success('Tarefa salva com sucesso');
+    })
+    .catch((error) => {
+      notify.error('Erro ao salvar tarefa: ' + error.message);
+    })
+    .finally(() => {
+      dialogVisible.value = false;
+    });
 }
 
 

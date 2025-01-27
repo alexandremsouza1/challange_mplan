@@ -1,4 +1,4 @@
-import apiClient from '@/config/axios';
+import apiClient from "@/config/axios";
 
 interface Task {
   id?: number;
@@ -13,7 +13,7 @@ export const taskService = {
    * @returns Uma promessa com os dados das tarefas.
    */
   async getAllTasks() {
-    const response = await apiClient.get<Task[]>('/tasks');
+    const response = await apiClient.get<Task[]>("/tasks");
     return response.data;
   },
 
@@ -23,7 +23,7 @@ export const taskService = {
    * @returns Uma promessa com os dados da tarefa criada.
    */
   async createTask(task: Task) {
-    const response = await apiClient.post<Task>('/tasks', task);
+    const response = await apiClient.post<Task>("/tasks", task);
     return response.data;
   },
 
