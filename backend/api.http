@@ -1,0 +1,40 @@
+# Base URL da API
+@baseUrl = http://localhost:3000/api
+
+### 1. Listar todas as tarefas (GET /tasks)
+GET {{baseUrl}}/tasks
+Content-Type: application/json
+
+###
+
+### 2. Criar uma nova tarefa (POST /tasks)
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Primeira Tarefa",
+  "description": "Descrição da primeira tarefa",
+  "completed": false
+}
+
+###
+
+### 3. Atualizar uma tarefa existente (PUT /tasks/:id)
+PUT {{baseUrl}}/tasks/1
+Content-Type: application/json
+
+{
+  "title": "Tarefa Atualizada",
+  "description": "Descrição atualizada da tarefa"
+}
+
+### 4. Marcar uma tarefa como concluída (PATCH /tasks/:id/done)
+PATCH {{baseUrl}}/tasks/1/done
+Content-Type: application/json
+
+
+###
+
+### 5. Excluir uma tarefa (DELETE /tasks/:id)
+DELETE {{baseUrl}}/tasks/1
+Content-Type: application/json
