@@ -1,25 +1,28 @@
-import { ElNotification } from 'element-plus';
+import { ElNotification } from "element-plus";
+import i18n from "@/config/i18n";
+
+const { t } = i18n.global;
 
 const notify = {
-  success(entity:string) {
+  success() {
     ElNotification({
-      title: 'Sucesso',
-      message: `${entity} criado(a) com sucesso!`,
-      type: 'success',
+      title: t("success"),
+      message: t("successMessage"),
+      type: "success",
     });
   },
-  error(entity:string) {
+  error(entity: string) {
     ElNotification({
-      title: 'Erro',
-      message: `Não foi possível criar o(a) ${entity}. Tente novamente.`,
-      type: 'error',
+      title: t("error"),
+      message: t("errorMessage", { entity }),
+      type: "error",
     });
   },
-  warning(entity:string) {
+  warning(entity: string) {
     ElNotification({
-      title: 'Aviso',
-      message: `Algo deu errado ao processar o(a) ${entity}. Verifique os dados.`,
-      type: 'warning',
+      title: t("warning"),
+      message: t("warningMessage", { entity }),
+      type: "warning",
     });
   },
 };

@@ -8,5 +8,11 @@
   "save": "Save",
   "cancel": "Cancel",
   "enterTaskDescription": "Enter task description",
-  "enterTaskTitle": "Enter task title"
+  "enterTaskTitle": "Enter task title",
+  "success": "Success",
+  "successMessage": "Action performed successfully.",
+  "error": "Error",
+  "errorMessage": "An error occurred: {error}. Please try again.",
+  "warning": "Warning",
+  "warningMessage": "Something went wrong: {warning}. Please check the data."
 }

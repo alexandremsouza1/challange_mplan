@@ -8,5 +8,11 @@
   "save": "Salvar",
   "cancel": "Cancelar",
   "enterTaskDescription": "Digite a descrição da tarefa",
-  "enterTaskTitle": "Digite o título da tarefa"
+  "enterTaskTitle": "Digite o título da tarefa",
+  "success": "Sucesso",
+  "successMessage": "Ação realizada com sucesso.",
+  "error": "Erro",
+  "errorMessage": "Ocorreu um erro: {error}. Tente novamente.",
+  "warning": "Aviso",
+  "warningMessage": "Algo deu errado : {warning}. Verifique os dados."
 }

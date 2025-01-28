@@ -14,7 +14,7 @@ const todosStore = useTodosStore();
 const emit = defineEmits(['update:checkAll', 'update:isIndeterminate']);
 
 const handleCheckedChange = (doneTodos: any[]): void => {
-  todosStore.updateTodo(doneTodos);
+  todosStore.doneTodo(doneTodos);
   emit('update:checkAll', todosStore.checkAllBool);
   emit('update:isIndeterminate', todosStore.isIndeterminate);
 }

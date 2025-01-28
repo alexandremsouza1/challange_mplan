@@ -8,49 +8,25 @@
       </el-button>
     </div>
 
-    <el-dialog v-model="dialogVisible" :title="isEditing ? $t('editTask') : $t('addTask')" width="400px">
-      <el-form :model="form" label-position="top">
-        <el-form-item :label="$t('title')">
-          <el-input v-model="form.title" :placeholder="$t('enterTaskTitle')" />
-        </el-form-item>
-        <el-form-item :label="$t('description')">
-          <el-input v-model="form.description" type="textarea" :placeholder="$t('enterTaskDescription')" />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogVisible = false">{{ $t('cancel') }}</el-button>
-          <el-button type="primary" @click="saveTodo">{{ $t('save') }}</el-button>
-        </span>
-      </template>
-    </el-dialog>
+    <ModalTask :save="saveTodo" :open="isOpen" @update:open="isOpen = $event" />
   </div>
 </template>
 
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import { useTodosStore, TodoItem } from '@/stores/todos';
 import notify from '@/services/notificationService';
+import ModalTask from './ModalTask.vue'
 
-const dialogVisible = ref(false)
-const isEditing = ref(false)
+const isOpen = ref(false)
 const todosStore = useTodosStore();
 
-const form = reactive({
-  title: '',
-  description: ''
-})
-
-
 const openAddModal = () => {
-  isEditing.value = false
-  form.title = ''
-  form.description = ''
-  dialogVisible.value = true
+  isOpen.value = true;
 }
 
-function saveTodo() {
+function saveTodo(form: any) {
   const newTodo: TodoItem = {
     id: Date.now().toString(),
     idSync: undefined,
@@ -60,14 +36,11 @@ function saveTodo() {
   };
   todosStore.addTodo(newTodo)
     .then(() => {
-      notify.success('Tarefa salva com sucesso');
+      notify.success();
     })
     .catch((error) => {
-      notify.error('Erro ao salvar tarefa: ' + error.message);
+      notify.error(error.message);
     })
-    .finally(() => {
-      dialogVisible.value = false;
-    });
 }
 
 

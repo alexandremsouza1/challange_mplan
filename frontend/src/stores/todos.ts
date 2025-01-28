@@ -87,12 +87,12 @@ export const useTodosStore = defineStore('todos', {
         async addTodo(todoObj: TodoItem) {
             this.todos.unshift(todoObj);
             try {
-                await this.updateSyncTodo(todoObj)
+                await this.syncTodo(todoObj)
             } catch (error) {
                 throw error;
             }
         },
-        async updateSyncTodo(todoObj: TodoItem) {
+        async syncTodo(todoObj: TodoItem) {
             try {
               const createdTask = await taskService.createTask({
                 title: todoObj.title,
@@ -109,16 +109,41 @@ export const useTodosStore = defineStore('todos', {
               throw error;
             }
         },
-        updateTodo(doneTodos: string[] = []) {
-            this.doneTodos = doneTodos;
+        async updateTodo(todoObj: TodoItem) {
+            const { title, description, idSync } = todoObj;
+            if (idSync) {
+              try {
+                await taskService.updateTask(idSync, { title, description });
+              } catch (error) {
+                console.error("Erro ao atualizar a tarefa:", error);
+              }
+            }
+            const todoToUpdate = this.todos.find((todo: TodoItem) => todo.id === todoObj.id);
+
+            if (todoToUpdate) {
+                todoToUpdate.title = title;
+                todoToUpdate.description = description;
+            }
+        },
+        async doneTodo(doneTodos: string[] = []) {
+            this.doneTodos = doneTodos
             this.todos = this.todos.map((todo: TodoItem) => ({
                 ...todo,
                 completed: doneTodos.includes(todo.id),
             }));
         },
-        deleteTodo(id: string) {
-            this.todos = this.todos.filter((todo: TodoItem) => todo.id !== id);
-            this.doneTodos = this.doneTodos.filter((doneId) => doneId !== id);
+        async deleteTodo(id: string) {
+            try {
+                const findTodo = this.todos.find((todo: TodoItem) => todo.id === id);
+                const idSync = findTodo?.idSync
+                if(idSync) {
+                    await taskService.deleteTask(idSync)
+                }
+                this.todos = this.todos.filter((todo: TodoItem) => todo.id !== id);
+                this.doneTodos = this.doneTodos.filter((doneId) => doneId !== id);
+            } catch (error) {
+                throw error;
+            }
         },
         checkAll(checked: boolean) {
             this.checkAllTodo(checked);
@@ -152,7 +177,7 @@ export const useTodosStore = defineStore('todos', {
                 return;
               }
               for (const todo of unsyncedTodos) {
-                await this.updateSyncTodo(todo);
+                await this.syncTodo(todo);
               }
               console.log("Todos sincronizados com sucesso.");
             } catch (error) {
