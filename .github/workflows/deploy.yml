@@ -14,17 +14,17 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-
-      - name: Install dependencies
-        uses: bahmutov/npm-install@v1
-
       - name: Enter the project directory
         run: cd frontend
 
       - name: List files in the project directory
         run: ls
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+
+      - name: Install dependencies
+        uses: bahmutov/npm-install@v1
 
       - name: Build project
         run: npm run build
