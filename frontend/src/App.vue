@@ -25,8 +25,8 @@ const checkAll = ref(false);
 
 
 const syncAll = async () => {
-  await todosStore.syncTasksFromServer()
   await todosStore.syncAll()
+  await todosStore.syncTasksFromServer()
 }
 
 
