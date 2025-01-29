@@ -117,7 +117,6 @@ export const useTodosStore = defineStore('todos', {
                 }
         
                 todo.completed = todoObj.completed
-                this.updateDoneTodos();
             } catch (error) {
                 throw error;
             }
