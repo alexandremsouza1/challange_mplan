@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-checkbox :label="props.todo.id">
+        <el-checkbox :label="props.todo.id" :model-value="props.todo.completed" @change="handleCheckboxChange">
             <span :style="{ textDecoration: props.todo.completed ? 'line-through' : 'none' }">
                 {{ props.todo.title }}
             </span>
@@ -58,6 +58,16 @@ const deleteTodo = (id: string) => {
         .catch((error) => {
             notify.error(error.message);
         })
+}
+
+const handleCheckboxChange = (completed: boolean) => {
+    const todo = { ...props.todo, completed };
+    todosStore.toggleTodo(todo).then(() => {
+        notify.success();
+    })
+    .catch((error:any) => {
+        notify.error(error.message);
+    })
 }
 
 </script>

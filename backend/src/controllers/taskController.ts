@@ -4,7 +4,7 @@ import {
   createTask,
   updateTask,
   deleteTask,
-  markTaskAsDone,
+  changeTask,
 } from "../models/taskModel";
 
 export const getTasks = async (req: Request, res: Response): Promise<void> => {
@@ -35,14 +35,14 @@ export const removeTask = async (
   res.status(204).send();
 };
 
-export const completeTask = async (
+export const toogleTask = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   const { id } = req.params;
 
   try {
-    const updatedTask = await markTaskAsDone(parseInt(id));
+    const updatedTask = await changeTask(parseInt(id), req.body.completed);
     if (!updatedTask) {
       res.status(404).json({ error: "Task not found" });
       return;

@@ -16,7 +16,7 @@ import { useTodosStore } from '@/stores/todos';
 import AddTask from './AddTask.vue'
 
 
-const emit = defineEmits(['update:checkAll', 'update:isIndeterminate']);
+const emit = defineEmits(['update:checkAll']);
 const todosStore = useTodosStore();
 
 
@@ -27,10 +27,6 @@ const handleCurrentChange = (val: number) => {
     todosStore.updateCurrentPage(val)
 }
 
-function updateState() {
-    emit('update:checkAll', todosStore.checkAllBool);
-    emit('update:isIndeterminate', todosStore.isIndeterminate);
-}
 </script>
 
 

@@ -4,7 +4,7 @@ import {
   addTask,
   modifyTask,
   removeTask,
-  completeTask,
+  toogleTask,
 } from "../controllers/taskController";
 
 const router = Router();
@@ -13,6 +13,6 @@ router.get("/tasks", getTasks);
 router.post("/tasks", addTask);
 router.put("/tasks/:id", modifyTask);
 router.delete("/tasks/:id", removeTask);
-router.patch("/tasks/:id/done", completeTask);
+router.patch("/tasks/:id", toogleTask);
 
 export default router;

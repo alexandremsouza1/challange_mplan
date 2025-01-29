@@ -43,8 +43,10 @@ export const taskService = {
    * @param id ID da tarefa a ser marcada como concluída.
    * @returns Uma promessa com os dados atualizados da tarefa.
    */
-  async markTaskAsDone(id: number) {
-    const response = await apiClient.patch<Task>(`/tasks/${id}/done`);
+  async toggleTask(id: number, completed: boolean) {
+    const response = await apiClient.patch<Task>(`/tasks/${id}`, {
+      completed,
+    });
     return response.data;
   },
 

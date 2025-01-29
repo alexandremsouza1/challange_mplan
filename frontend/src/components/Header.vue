@@ -48,7 +48,7 @@ import { useI18n } from "vue-i18n";
 import debounce from "lodash/debounce";
 
 
-const emit = defineEmits(['update:checkAll', 'update:isIndeterminate']);
+const emit = defineEmits(['update:checkAll']);
 const todosStore = useTodosStore();
 
 const todo = ref<string>('');

@@ -26,9 +26,6 @@ export const useTodosStore = defineStore('todos', {
         checkAllBool(): boolean {
             return this.todosLen === this.doneTodosLen;
         },
-        isIndeterminate(): boolean {
-            return this.doneTodosLen > 0 && this.doneTodosLen < this.todosLen;
-        },
         filteredTodos(state): TodoItem[] {
             const filterText = state.filter.toLowerCase();
             return state.todos.filter((todo: TodoItem) =>
@@ -107,6 +104,22 @@ export const useTodosStore = defineStore('todos', {
               );
             } catch (error) {
               throw error;
+            }
+        },
+        async toggleTodo(todoObj: TodoItem) {
+            try {
+                const todo = this.todos.find((t: TodoItem) => t.id === todoObj.id);
+                if (!todo) {
+                    throw new Error("Tarefa não encontrada.");
+                }
+                if (todoObj.idSync) {
+                    await taskService.toggleTask(todoObj.idSync,todoObj.completed);
+                }
+        
+                todo.completed = todoObj.completed
+                this.updateDoneTodos();
+            } catch (error) {
+                throw error;
             }
         },
         async updateTodo(todoObj: TodoItem) {

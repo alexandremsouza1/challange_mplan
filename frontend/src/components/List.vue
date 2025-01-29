@@ -11,12 +11,11 @@ import { useTodosStore } from '@/stores/todos';
 import Item from './Item.vue';
 
 const todosStore = useTodosStore();
-const emit = defineEmits(['update:checkAll', 'update:isIndeterminate']);
+const emit = defineEmits(['update:checkAll']);
 
 const handleCheckedChange = (doneTodos: any[]): void => {
   todosStore.doneTodo(doneTodos);
   emit('update:checkAll', todosStore.checkAllBool);
-  emit('update:isIndeterminate', todosStore.isIndeterminate);
 }
 
 </script>

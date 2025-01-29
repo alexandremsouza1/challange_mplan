@@ -34,10 +34,10 @@ export const deleteTask = async (id: number): Promise<void> => {
   await pool.query("DELETE FROM tasks WHERE id = $1", [id]);
 };
 
-export const markTaskAsDone = async (id: number): Promise<Task> => {
+export const changeTask = async (id: number, completed: boolean): Promise<Task> => {
   const result = await pool.query(
-    "UPDATE tasks SET completed = TRUE WHERE id = $1 RETURNING *",
-    [id]
+    "UPDATE tasks SET completed = $2 WHERE id = $1 RETURNING *",
+    [id, completed]
   );
   return result.rows[0];
 };
