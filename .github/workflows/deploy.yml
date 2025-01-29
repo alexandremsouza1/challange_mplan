@@ -1,33 +1,53 @@
-name: Deploy Frontend to GitHub Pages
+# Deploy de conteúdo estático para o GitHub Pages
+name: Deploy static content to Pages
 
 on:
+  # Somente executa quando há push no branch principal.
   push:
-    branches:
-      - main
+    branches: ['main']
+
+  # Esta opção permite disparar o workflow manualmente na página de Actions
+  workflow_dispatch:
+
+# Definindo permissões para o GITHUB_TOKEN, permitindo deploy no GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Permite um deploy simultâneo
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  # Descrição do trabalho de deploy único
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    env:
-      VITE_API_URL: "http://localhost:3000/api"
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
         with:
-          node-version: 20
-
-      - name: Install Dependencies and Build
-        run: |
-          cd frontend
-          rm -rf node_modules package-lock.json
-          npm install
-          npm run build
-
+          node-version: 18
+          cache: 'npm'
+      - name: Enter frontend directory
+        run: cd frontend
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          # Faz o upload do diretório dist
+          path: './frontend/dist'
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./frontend/dist
+        id: deployment
+        uses: actions/deploy-pages@v1
