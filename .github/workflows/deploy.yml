@@ -1,53 +1,54 @@
-# Deploy de conteúdo estático para o GitHub Pages
-name: Deploy static content to Pages
+name: 🐈‍⬛ Deploy (Vite)
 
 on:
-  # Somente executa quando há push no branch principal.
   push:
-    branches: ['main']
-
-  # Esta opção permite disparar o workflow manualmente na página de Actions
-  workflow_dispatch:
-
-# Definindo permissões para o GITHUB_TOKEN, permitindo deploy no GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Permite um deploy simultâneo
-concurrency:
-  group: 'pages'
-  cancel-in-progress: true
+    branches:
+      - main
 
 jobs:
-  # Descrição do trabalho de deploy único
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
+    name: Build project 🔨
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: 🛎️ Checkout repo
         uses: actions/checkout@v3
-      - name: Set up Node
+
+      - name: 📦 Cài Node.js
         uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'npm'
-      - name: Enter frontend directory
+
+      - name: 🛠️ Tải dependencies
+        uses: bahmutov/npm-install@v1
+
+      - name: Entering frontend directory
         run: cd frontend
-      - name: Install dependencies
-        run: npm install
-      - name: Build
+
+      - name: 🏗️ Build dự án
+        env:
+          VITE_API_URL: http://localhost:3000/api
         run: npm run build
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+
+      - name: 📤 Upload build artifacts
+        uses: actions/upload-artifact@v3
         with:
-          # Faz o upload do diretório dist
-          path: './frontend/dist'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v1
+          name: production-files
+          path: ./frontend/dist
+
+  deploy:
+    name: Deploy lên GitHub pages 🚀
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: 📥 Tải build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: production-files
+          path: ./frontend/dist
+
+      - name: 🌐 Deploy lên nhánh gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./frontend/dist
