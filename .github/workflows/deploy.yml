@@ -35,8 +35,12 @@ jobs:
         with:
           node-version: 20
      
-      - name: Install dependencies
-        run: cd frontend && npm install --legacy-peer-deps --no-optional
+      - name: Clean npm cache and reinstall dependencies
+        run: |
+            rm -rf frontend/node_modules
+            rm frontend/package-lock.json
+            cd frontend
+            npm install --legacy-peer-deps
       - name: Build
         run: cd frontend && npm run build
       - name: Setup Pages
