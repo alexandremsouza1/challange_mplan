@@ -81,6 +81,35 @@ export const useTodosStore = defineStore('todos', {
                 resolve(this.todos.some((todo: TodoItem) => todo.title === title));
             });
         },
+        async syncTasksFromServer() {
+            try {
+                const serverTasks = await taskService.getAllTasks();
+        
+                const existingIds = new Set(this.todos.map(todo => todo.idSync));
+                const newTasks = serverTasks.filter(task => !existingIds.has(task.id));
+        
+                if (newTasks.length === 0) {
+                    console.log("Nenhuma nova task para sincronizar.");
+                    return;
+                }
+                const normalizedTasks: TodoItem[] = await Promise.all(newTasks.map(async (task: any) => ({
+                    id: Date.now().toString() + Math.random(),
+                    idSync: task.id,
+                    title: task.title,
+                    description: task.description,
+                    completed: task.completed,
+                })));
+        
+                this.todos = [...this.todos, ...normalizedTasks];
+                this.doneTodos = this.todos
+                    .filter((todo: TodoItem) => todo.completed)
+                    .map((todo: TodoItem) => todo.id);
+        
+                console.log("Sincronização de tasks concluída.");
+            } catch (error) {
+                console.error("Erro ao sincronizar tasks do servidor:", error);
+            }
+        },
         async addTodo(todoObj: TodoItem) {
             this.todos.unshift(todoObj);
             try {
